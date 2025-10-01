@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>URL Parts & Parameters Demo</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="url-demo">
+      <header>
+        <h1>URL Debug Playground</h1>
+        <p class="tagline">Inspect the current page URL and its components in real-time.</p>
+      </header>
+      <section class="full-url card">
+        <h2>Full URL</h2>
+        <div id="fullUrl" class="code-row" aria-live="polite"></div>
+      </section>
+      <section class="parts card">
+        <h2>URL Components</h2>
+        <table class="parts-table" aria-describedby="partsCaption">
+          <caption id="partsCaption">Breakdown of the current URL</caption>
+          <thead>
+            <tr><th scope="col">Part</th><th scope="col">Value</th></tr>
+          </thead>
+          <tbody id="partsBody"></tbody>
+        </table>
+      </section>
+      <section class="params card">
+        <h2>Query Parameters</h2>
+        <div id="paramsList" class="params-list" aria-live="polite"></div>
+        <p class="empty-hint" id="noParams" hidden>No query parameters present. Try adding <span class="code">?foo=bar&debug=true</span> to the URL.</p>
+      </section>
+      <footer>
+        <p class="note">Update the address bar parameters and refresh to see changes. Great for embedded debugging scenarios.</p>
+      </footer>
+    </main>
+
+    <script>
+      (function() {
+        const url = new URL(window.location.href);
+        const parts = {
+          protocol: url.protocol,
+          username: url.username || '(none)',
+          password: url.password ? '••••••' : '(none)',
+          host: url.host,
+            hostname: url.hostname,
+          port: url.port || '(default)',
+          pathname: url.pathname,
+          search: url.search || '(none)',
+          hash: url.hash || '(none)',
+          origin: url.origin
+        };
+
+        // Render full URL
+        document.getElementById('fullUrl').textContent = url.href;
+
+        // Populate parts table
+        const tbody = document.getElementById('partsBody');
+        Object.entries(parts).forEach(([k,v]) => {
+          const tr = document.createElement('tr');
+          const keyCell = document.createElement('th');
+          keyCell.scope = 'row';
+          keyCell.textContent = k;
+          const valCell = document.createElement('td');
+          valCell.textContent = v;
+          tr.appendChild(keyCell);
+          tr.appendChild(valCell);
+          tbody.appendChild(tr);
+        });
+
+        // Render query params
+        const paramsContainer = document.getElementById('paramsList');
+        const noParams = document.getElementById('noParams');
+        const searchParams = Array.from(url.searchParams.entries());
+        if (searchParams.length === 0) {
+          noParams.hidden = false;
+        } else {
+          searchParams.forEach(([key, value]) => {
+            const chip = document.createElement('div');
+            chip.className = 'param-chip';
+            chip.innerHTML = `<span class="param-key">${key}</span><span class="eq">=</span><span class="param-value">${value || '(empty)'}</span>`;
+            paramsContainer.appendChild(chip);
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
