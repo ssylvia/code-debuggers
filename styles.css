@@ -21,6 +21,8 @@ header h1 { margin-bottom: .25rem; }
   width: 100%;
   display: grid;
   gap: 1.5rem;
+  /* Provide a little top/bottom breathing room on very tall views */
+  padding-block: .25rem 1rem;
 }
 
 .tagline { margin: 0 0 1rem; font-size: .95rem; opacity: .85; }
@@ -44,6 +46,8 @@ header h1 { margin-bottom: .25rem; }
   overflow-wrap: anywhere;
   font-size: .9rem;
   border: 1px solid #263545;
+  max-height: 180px;
+  overflow: auto;
 }
 
 table.parts-table {
@@ -74,6 +78,8 @@ table.parts-table th { font-weight: 600; width: 140px; color: #9fd1ff; }
   flex-wrap: wrap;
   gap: .6rem .75rem;
   margin-bottom: .75rem;
+  /* Ensure long sets of chips don't stretch page width */
+  overflow: hidden;
 }
 
 .param-chip {
@@ -107,6 +113,31 @@ footer .note { font-size: .7rem; opacity: .55; margin: .5rem 0 0; text-align: ce
 }
 
 @media (max-width: 560px) {
-  body { padding: 1.25rem; }
-  .card { padding: 1rem 1rem 1.1rem; }
+  body { padding: 1rem; align-items: flex-start; }
+  .url-demo { gap: 1.1rem; }
+  header h1 { font-size: 1.6rem; }
+  .tagline { font-size: .85rem; }
+  .card { padding: .9rem .9rem 1rem; }
+  table.parts-table { font-size: .78rem; }
+  .param-chip { font-size: .68rem; }
+  .full-url .code-row { font-size: .78rem; max-height: 140px; }
+}
+
+/* Ultra narrow devices or embedded iframes */
+@media (max-width: 380px) {
+  body { padding: .65rem; }
+  header h1 { font-size: 1.35rem; }
+  .card { border-radius: 12px; }
+  .param-chip { padding: .45rem .55rem .4rem; border-radius: 8px; }
+  .full-url .code-row { padding: .6rem .7rem; }
+}
+
+/* Respect preferred reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+/* Larger desktop refinement */
+@media (min-width: 1200px) {
+  .url-demo { max-width: 1040px; }
 }
